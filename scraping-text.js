@@ -18,7 +18,7 @@ async function start() {
 
     //Percorrendo e acessando cada um dos links.
     for (const link of linksDogs) {
-        const imagepage = await page.goto(link)
+        await page.goto(link)
 
         //Selecionando todos os links de imagens dentro de cada raça de cachorro.
         const imgsDogs = await page.evaluate(() => {
