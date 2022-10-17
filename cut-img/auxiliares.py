@@ -11,6 +11,7 @@ def retornaListaDeConteudoNoDiretorio(path):
     #Retornando lista com todos os conteúdos.
     return contents
 
+
 def retornaListaComConteudoDoArquivoDeTexto(txt):
 
     contents = []
@@ -29,52 +30,48 @@ def retornaListaComConteudoDoArquivoDeTexto(txt):
     return contents
 
 
+def retornaInformacoesDeCorteDaImagem(contents):
 
-def verificaSeClasseCachorroEstaNoArquivo(txt):
+    cutInformation = []
 
-    #Abre arquivo para ler conteúdo.
-    with open(txt) as file:
+    for list in contents:
+        
+        #(verificar qual tipo dos elementos da lista).
+        if list[0] == "16":
+            
+            #Acrescenta uma lista contendo informacoes de corte da imagem.
+            cutInformation.append([list[1], list[2], list[3], list[4]])
+    
+    return cutInformation
 
-        #Percorre arquivo linha por linha.
-        for line in file:
-
-            #Separa conteúdo da linha por espaços em branco (" "). 
-            listaValores = line.split(" ")
-
-            #Se o primeiro elemento (identificador de classe) for igual a 16, siginifica que cachorro foi identificado.
-            if listaValores[0] == "16": #String ou Int
-                return "dog"
-
-                #Essa parte é para o corte de imagem.   
-                # for elem in listaValores:
-                #     print(elem)
-
-            print("Fim!")
 
 def cortaRetanguloIdentificadoPelaYolo(infos, img):
 
-    #definindo atributos da imagem.
     largura = img.shape[1]
-    # print(largura)
     altura = img.shape[0]
-    # print(altura)
+    
+    for info in infos:
 
-    x = 0.583333 * largura
-    y = 0.5375 * altura
-    w = 0.833333 * largura
-    h = 0.925 * altura
+        #Define parametros de corte.
+        x = info[1] * largura
+        y = info[2] * altura
+        w = info[3] * largura
+        h = info[4] * altura
 
-    #provisório: parâmetros para fazer o corte da imagem, posteriormente utilizaremos os arquivos com os dados.
-    starting_x_coordinate = x - (w/2)
-    starting_y_coordinate = y - (h/2)
-    ending_x_coordinate = x + (w/2)
-    ending_y_coordinate = y + (h/2)
+        #Provisório: parâmetros para fazer o corte da imagem, posteriormente utilizaremos os arquivos com os dados.
+        starting_x_coordinate = x - (w/2)
+        starting_y_coordinate = y - (h/2)
+        ending_x_coordinate = x + (w/2)
+        ending_y_coordinate = y + (h/2)
 
-    #recorta pedaço da imagem de acordo com os parametros passados
-    crop_image = image[round(starting_y_coordinate):round(ending_y_coordinate), round(starting_x_coordinate):round(ending_x_coordinate)]
+        #Recorta pedaço da imagem de acordo com os parametros passados
+        crop_image = img[round(starting_y_coordinate):round(ending_y_coordinate), round(starting_x_coordinate):round(ending_x_coordinate)]
 
-    #exibe imagem
-    cv2.imshow("Cropped", crop_image)
+        #Exibe imagem
+        #cv2.imshow("Cropped", crop_image)
 
-    #não sei o que faz
-    cv2.waitKey(0)
+        #Salvando imagem. onde ele salva?
+        cv2.imwrite("CroppedImage", crop_image)
+
+        #Não sei o que faz
+        cv2.waitKey(0)
