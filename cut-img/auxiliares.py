@@ -22,6 +22,7 @@ def retornaListaComConteudoDoArquivoDeTexto(txt):
         for line in file:
 
             #Separa conteúdo da linha por espaços em branco (" "). 
+            line = line.rstrip('\n')
             elements = line.split(" ")
 
             contents.append(elements)
@@ -45,14 +46,19 @@ def retornaInformacoesDeCorteDaImagem(contents):
     return cutInformation
 
 
-def cortaRetanguloIdentificadoPelaYolo(infos, img):
+def cortaRetanguloIdentificadoPelaYolo(infos, img, nomeImg, pasta):
 
+    print(img)
+
+    img = cv2.imread(img)
     largura = img.shape[1]
     altura = img.shape[0]
+    cont = 0
     
     for info in infos:
-
+        
         #Define parametros de corte.
+        
         x = info[1] * largura
         y = info[2] * altura
         w = info[3] * largura
@@ -71,7 +77,10 @@ def cortaRetanguloIdentificadoPelaYolo(infos, img):
         #cv2.imshow("Cropped", crop_image)
 
         #Salvando imagem. onde ele salva?
-        cv2.imwrite("CroppedImage", crop_image)
+        
+        cv2.imwrite(pasta + "\\" + nomeImg + cont, crop_image)
+        
+        cont += 1
 
         #Não sei o que faz
-        cv2.waitKey(0)
+        # cv2.waitKey(0)
